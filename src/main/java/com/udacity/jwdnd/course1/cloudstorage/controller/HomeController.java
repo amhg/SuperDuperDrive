@@ -27,13 +27,10 @@ public class HomeController {
 
   @GetMapping("/home")
   public ModelAndView getHomePage(ModelAndView modelAndView) {
-/*  public ModelAndView getHomePage(Authentication authentication, ModelAndView modelAndView) {
-    String userName = (String) authentication.getPrincipal();
-    modelAndView.addObject("userName", userName);*/
     modelAndView.addObject("files", fileService.getAllFiles());
     modelAndView.addObject("notes", noteService.getAllNotes());
     modelAndView.addObject("credentials", credentialService.getAllCredentials());
-    //modelAndView.addObject("encryptionService", encryptionService);
+    modelAndView.addObject("encryptionService", encryptionService);
     return modelAndView;
   }
 
