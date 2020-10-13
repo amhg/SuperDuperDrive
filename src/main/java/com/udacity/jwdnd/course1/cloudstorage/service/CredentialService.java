@@ -20,4 +20,8 @@ public class CredentialService {
     return credentialMapper.getAllCredentials();
   }
 
+  public int updateCredential(Credential credential){
+    return credentialMapper.updateCredential(credential);
+  }
+
 }

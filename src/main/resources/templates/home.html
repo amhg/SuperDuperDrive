@@ -203,7 +203,6 @@
                 $('#note-description').val(note && note.noteDescription ? note.noteDescription : '');
                 $('#noteModal').modal('show');
             }
-
             // For opening the credentials modal
             function showCredentialModal(credentialid, url, username, password) {
                 $('#credential-id').val(credentialid ? credentialid : '');
@@ -212,13 +211,6 @@
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
             }
-/*            function showCredentialModal(credential) {
-                $('#credential-id').val(credential && credential.credentialid ? credential.credentialid : 0);
-                $('#credential-url').val(credential && credential.url ? credential.url : '');
-                $('#credential-username').val(credential && credential.username ? credential.username : '');
-                $('#credential-password').val(credential && credential.password ? credential.password : '');
-                $('#credentialModal').modal('show');
-            }*/
 
         </script>
     </body>

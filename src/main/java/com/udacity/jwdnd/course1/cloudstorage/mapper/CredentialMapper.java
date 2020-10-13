@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,5 +19,8 @@ public interface CredentialMapper {
 
   @Select("SELECT * FROM CREDENTIALS")
   List<Credential> getAllCredentials();
+
+  @Update("UPDATE CREDENTIALS SET url = #{url}, username = #{username}, password = #{password} WHERE credentialid = #{credentialid}")
+  int updateCredential(Credential credential);
 
 }

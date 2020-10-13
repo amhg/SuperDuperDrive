@@ -6,7 +6,6 @@ import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import java.security.SecureRandom;
 import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -21,11 +20,13 @@ public class CredentialController {
 
   @PostMapping("/credentials")
   public String encryptAndAddCredential(Credential credential){
-
     Credential encryptedCredential = encryptCredential(credential);
 
-    credentialService.addCredential(encryptedCredential);
-
+    if(credential.getCredentialid() != null){
+      credentialService.updateCredential(credential);
+    }else{
+      credentialService.addCredential(encryptedCredential);
+    }
     return "redirect:/home";
   }
 
