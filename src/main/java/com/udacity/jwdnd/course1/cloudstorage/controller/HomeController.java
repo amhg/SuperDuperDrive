@@ -32,7 +32,8 @@ public class HomeController {
 
   @GetMapping("/home")
   public ModelAndView getHomePage(Authentication authentication, ModelAndView modelAndView) {
-    String username = authentication.getName();
+    User user = (User) authentication.getPrincipal();
+    int userid = user.getUserId();
     modelAndView.addObject("files", fileService.getAllFiles());
     modelAndView.addObject("notes", noteService.getAllNotes());
     modelAndView.addObject("credentials", credentialService.getAllCredentials());
