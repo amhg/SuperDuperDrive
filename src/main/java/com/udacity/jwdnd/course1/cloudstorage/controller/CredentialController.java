@@ -25,7 +25,7 @@ public class CredentialController {
     Credential encryptedCredential = encryptCredential(credential);
 
     if(credential.getCredentialid() != null){
-      credentialService.updateCredential(encryptedCredential);
+      credentialService.updateCredential(credential);
     }else{
       credentialService.addCredential(encryptedCredential);
     }
@@ -40,10 +40,15 @@ public class CredentialController {
 
   private Credential encryptCredential(Credential credential) {
     String password = credential.getPassword();
+    String encodedKey="";
     SecureRandom random = new SecureRandom();
     byte[] key = new byte[16];
     random.nextBytes(key);
-    String encodedKey = Base64.getEncoder().encodeToString(key);
+    if(credential.getCredentialid() == null){
+      encodedKey = Base64.getEncoder().encodeToString(key);
+    }else{
+      encodedKey=credential.getCredentialKey();
+    }
     String encryptedPassword = encryptionService.encryptValue(password, encodedKey);
     credential.setPassword(encryptedPassword);
     credential.setCredentialKey(encodedKey);

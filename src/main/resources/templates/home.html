@@ -139,7 +139,7 @@
                                 <tbody>
                                 <tr th:each ="credential: ${credentials}">
                                     <td>
-                                        <button th:onclick="javascript:showCredentialModal([[${credential.credentialid}]],[[${credential.url}]],[[${credential.username}]], [[${encryptionService.decryptValue(credential.password, credential.credentialKey)}]])" type="button" class="btn btn-success">Edit</button>
+                                        <button th:onclick="javascript:showCredentialModal([[${credential.credentialid}]],[[${credential.url}]],[[${credential.username}]], [[${encryptionService.decryptValue(credential.password, credential.credentialKey)}]], [[${credential.credentialKey}]])" type="button" class="btn btn-success">Edit</button>
                                         <a th:href="@{/deleteCredential/{credentialId} (credentialId = ${credential.credentialid})}" class="btn btn-danger">Delete</a>
                                     </td>
                                     <th th:text="${credential.url}" scope="row"></th>
@@ -162,6 +162,7 @@
                                     <div class="modal-body">
                                         <form action="#" th:action="@{/credentials}" method="POST">
                                             <input type="hidden" name="credentialid" id="credential-id">
+                                            <input type="hidden" name="credentialKey" id="credential-Key">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>
                                                 <input type="text" name= "url" class="form-control" id="credential-url" maxlength="100" required>
@@ -203,11 +204,12 @@
                 $('#noteModal').modal('show');
             }
             // For opening the credentials modal
-            function showCredentialModal(credentialid, url, username, password) {
+            function showCredentialModal(credentialid, url, username, password, credentialKey) {
                 $('#credential-id').val(credentialid ? credentialid : '');
                 $('#credential-url').val(url ? url : '');
                 $('#credential-username').val(username ? username : '');
                 $('#credential-password').val(password ? password : '');
+                $('#credential-Key').val(credentialKey ? credentialKey : '');
                 $('#credentialModal').modal('show');
             }
 
