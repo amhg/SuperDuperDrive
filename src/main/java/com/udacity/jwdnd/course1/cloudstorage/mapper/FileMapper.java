@@ -1,7 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.mapper;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.FileDao;
-import java.nio.file.Files;
+import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -15,17 +14,17 @@ import org.springframework.stereotype.Repository;
 public interface FileMapper {
 
   @Select("SELECT * FROM FILES")
-  List<FileDao> getAllMessages();
+  List<File> getAllFiles();
 
   @Insert("INSERT INTO FILES (fileName, filePath) VALUES(#{fileName}, #{filePath})")
   @Options(useGeneratedKeys = true, keyProperty = "fileId")
-  int addFile(FileDao fileDao);
+  int addFile(File file);
 
   @Select("SELECT * FROM FILES WHERE fileId= #{fileId}")
-  FileDao findFileById(String fileId);
+  File findFileById(String fileId);
 
   @Select("SELECT * FROM FILES WHERE userid = #{userid}")
-  List<FileDao> findByUserId(int userid);
+  List<File> findByUserId(int userid);
 
   @Delete("DELETE FROM FILES WHERE fileId= #{fileId}")
   boolean deleteNoteById(String id);

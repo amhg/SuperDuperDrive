@@ -1,8 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.FileDao;
+import com.udacity.jwdnd.course1.cloudstorage.model.File;
+import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.service.FileService;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,8 @@ public class FileController {
   FileService fileService;
 
   @PostMapping("/uploadFile")
-  public String validateAndSaveFile(@RequestParam("fileUpload") MultipartFile file, RedirectAttributes redirectAttributes){
-
+  public String validateAndSaveFile(Authentication authentication, @RequestParam("fileUpload") MultipartFile file, RedirectAttributes redirectAttributes){
+    String user = authentication.getName();
     if(file.isEmpty()){
       redirectAttributes.addFlashAttribute("errorMessage",  "No File Selected, please try again");
       return "redirect:/home";
@@ -46,10 +47,10 @@ public class FileController {
 
   public ResponseEntity<byte[]> getAndDisplayFile(@PathVariable String fileId) throws IOException {
 
-    FileDao fileDao = fileService.getFile(fileId);
+    File fileDao = fileService.getFile(fileId);
     byte[] data = Files.readAllBytes(Paths.get(fileDao.getFilePath()));
 
-    File file = new File(fileDao.getFilePath());
+    java.io.File file = new java.io.File(fileDao.getFilePath());
     String name = file.getName();
     String mime = Files.probeContentType( Paths.get(file.getPath()));
 

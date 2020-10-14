@@ -3,8 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.service;
 
 import com.udacity.jwdnd.course1.cloudstorage.exception.FileStorageException;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.FileMapper;
-import com.udacity.jwdnd.course1.cloudstorage.model.FileDao;
-import java.io.File;
+import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,7 +26,7 @@ public class FileService {
 
   public boolean validateFile(MultipartFile originalFilename) {
 
-    for(FileDao file: getAllFiles()){
+    for(File file: getAllFiles()){
       String userFileName = StringUtils.cleanPath(originalFilename.getOriginalFilename());
       if(file.getFileName().equalsIgnoreCase(userFileName)){
         return true;
@@ -38,10 +37,10 @@ public class FileService {
 
   public void saveFile(MultipartFile file) {
     try{
-      Path copyLocation = Paths.get(uploadDir + File.separator + StringUtils.cleanPath(file.getOriginalFilename()));
+      Path copyLocation = Paths.get(uploadDir + java.io.File.separator + StringUtils.cleanPath(file.getOriginalFilename()));
       Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
 
-      FileDao fileDao = new FileDao();
+      File fileDao = new File();
       fileDao.setFileName(file.getOriginalFilename());
       fileDao.setFilePath(copyLocation.toString());
       this.fileMapper.addFile(fileDao);
@@ -52,12 +51,13 @@ public class FileService {
     }
   }
 
-  public List<FileDao> getAllFiles(){
-    return fileMapper.getAllMessages();
+  public List<File> getAllFiles(){
+    //List<File> files = fileMapper.findByUserId(userid);
+    return fileMapper.getAllFiles();
   }
 
-  public List<FileDao> getAllFilesByUserId(int userid) throws Exception {
-    List<FileDao> files = fileMapper.findByUserId(userid);
+  public List<File> getAllFilesByUserId(int userid) throws Exception {
+    List<File> files = fileMapper.findByUserId(userid);
     if(files == null){
       throw new Exception();
     }
@@ -65,7 +65,7 @@ public class FileService {
   }
 
 
-  public FileDao getFile(String fileId) {
+  public File getFile(String fileId) {
     return fileMapper.findFileById(fileId);
   }
 

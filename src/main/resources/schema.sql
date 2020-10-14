@@ -8,16 +8,12 @@ CREATE TABLE IF NOT EXISTS USERS (
 );
 
 
-CREATE TABLE IF NOT EXISTS MESSAGES (
- messageid INT PRIMARY KEY auto_increment,
- username VARCHAR NOT NULL,
- messagetext VARCHAR NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS FILES (
  fileId INT PRIMARY KEY auto_increment,
  fileName VARCHAR NOT NULL,
- filePath VARCHAR NOT NULL
+ filePath VARCHAR NOT NULL,
+ userid INT,
+ foreign key (userid) references USERS(userid)
 );
 
 
