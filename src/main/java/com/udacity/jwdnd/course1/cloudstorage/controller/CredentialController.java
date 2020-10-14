@@ -7,6 +7,8 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -19,14 +21,20 @@ public class CredentialController {
   private EncryptionService encryptionService;
 
   @PostMapping("/credentials")
-  public String encryptAndAddCredential(Credential credential){
+  public String encryptAndAddOrUpdateCredential(Credential credential){
     Credential encryptedCredential = encryptCredential(credential);
 
     if(credential.getCredentialid() != null){
-      credentialService.updateCredential(credential);
+      credentialService.updateCredential(encryptedCredential);
     }else{
       credentialService.addCredential(encryptedCredential);
     }
+    return "redirect:/home";
+  }
+
+  @GetMapping("/deleteCredential/{credentialId}")
+  public String deleteCredential(@PathVariable int credentialId){
+    credentialService.deleteCredential(credentialId);
     return "redirect:/home";
   }
 

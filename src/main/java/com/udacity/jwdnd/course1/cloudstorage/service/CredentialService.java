@@ -20,8 +20,16 @@ public class CredentialService {
     return credentialMapper.getAllCredentials();
   }
 
+  public Credential getCredentialById(Integer credentialid){
+    return credentialMapper.getCredentialById(credentialid);
+  }
+
   public int updateCredential(Credential credential){
     return credentialMapper.updateCredential(credential);
+  }
+
+  public boolean deleteCredential(int credentialId){
+    return credentialMapper.deleteCredentialById(credentialId);
   }
 
 }
