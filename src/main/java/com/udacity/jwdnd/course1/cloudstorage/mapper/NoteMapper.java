@@ -14,12 +14,12 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface NoteMapper {
 
-  @Insert("INSERT INTO NOTES (noteTitle, noteDescription) VALUES(#{noteTitle}, #{noteDescription})")
+  @Insert("INSERT INTO NOTES (noteTitle, noteDescription, userid) VALUES(#{noteTitle}, #{noteDescription}, #{userid})")
   @Options(useGeneratedKeys = true, keyProperty = "noteId")
   int addNote(Note note);
 
-  @Select("SELECT * FROM NOTES")
-  List<Note> getAllNotes();
+  @Select("SELECT * FROM NOTES WHERE userid = #{userid}")
+  List<Note> findAllNotesByUserId(int userid);
 
   @Update("UPDATE NOTES SET noteTitle = #{noteTitle}, noteDescription = #{noteDescription} WHERE noteId = #{noteId}")
   int updateNote(Note note);

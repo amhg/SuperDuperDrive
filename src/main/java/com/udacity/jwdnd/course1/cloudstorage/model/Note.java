@@ -6,6 +6,7 @@ public class Note {
   private Integer noteId;
   private String noteTitle;
   private String noteDescription;
+  public int userid;
 
   public Integer getNoteId() {
     return noteId;
@@ -29,5 +30,13 @@ public class Note {
 
   public void setNoteDescription(String noteDescription) {
     this.noteDescription = noteDescription;
+  }
+
+  public int getUserid() {
+    return userid;
+  }
+
+  public void setUserid(int userid) {
+    this.userid = userid;
   }
 }

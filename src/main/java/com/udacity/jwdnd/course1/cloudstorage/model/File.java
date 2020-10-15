@@ -6,6 +6,7 @@ public class File {
   private Integer fileId;
   private String fileName;
   private String filePath;
+  private int userid;
 
   public Integer getFileId() {
     return fileId;
@@ -29,5 +30,13 @@ public class File {
 
   public void setFilePath(String filePath) {
     this.filePath = filePath;
+  }
+
+  public int getUserid() {
+    return userid;
+  }
+
+  public void setUserid(int userid) {
+    this.userid = userid;
   }
 }

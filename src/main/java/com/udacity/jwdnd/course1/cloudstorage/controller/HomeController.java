@@ -1,13 +1,11 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.service.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.service.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
-import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -29,14 +27,21 @@ public class HomeController {
   @Autowired
   private EncryptionService encryptionService;
 
+  @Autowired
+  private UserMapper userMapper;
+
 
   @GetMapping("/home")
-  public ModelAndView getHomePage(Authentication authentication, ModelAndView modelAndView) {
-    User user = (User) authentication.getPrincipal();
-    int userid = user.getUserId();
-    modelAndView.addObject("files", fileService.getAllFiles());
-    modelAndView.addObject("notes", noteService.getAllNotes());
-    modelAndView.addObject("credentials", credentialService.getAllCredentials());
+  public ModelAndView getHomePage(Authentication authentication, ModelAndView modelAndView)
+      throws Exception {
+
+    String username = (String) authentication.getPrincipal();
+    User user = userMapper.getUser(username);
+
+    modelAndView.addObject("username", user.getUsername());
+    modelAndView.addObject("files", fileService.getAllFilesByUserId(user.getUserId()));
+    modelAndView.addObject("notes", noteService.getAllNotesByUserId(user.getUserId()));
+    modelAndView.addObject("credentials", credentialService.getAllCredentialsByUserId(user.getUserId()));
     modelAndView.addObject("encryptionService", encryptionService);
     return modelAndView;
   }

@@ -24,18 +24,7 @@ public class FileService {
   @Value("${app.upload.dir:${user.home}}")
   public String uploadDir;
 
-  public boolean validateFile(MultipartFile originalFilename) {
-
-    for(File file: getAllFiles()){
-      String userFileName = StringUtils.cleanPath(originalFilename.getOriginalFilename());
-      if(file.getFileName().equalsIgnoreCase(userFileName)){
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public void saveFile(MultipartFile file) {
+  public void saveFile(MultipartFile file, int userid) {
     try{
       Path copyLocation = Paths.get(uploadDir + java.io.File.separator + StringUtils.cleanPath(file.getOriginalFilename()));
       Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
@@ -43,6 +32,7 @@ public class FileService {
       File fileDao = new File();
       fileDao.setFileName(file.getOriginalFilename());
       fileDao.setFilePath(copyLocation.toString());
+      fileDao.setUserid(userid);
       this.fileMapper.addFile(fileDao);
 
     } catch(Exception e){
@@ -51,13 +41,8 @@ public class FileService {
     }
   }
 
-  public List<File> getAllFiles(){
-    //List<File> files = fileMapper.findByUserId(userid);
-    return fileMapper.getAllFiles();
-  }
-
   public List<File> getAllFilesByUserId(int userid) throws Exception {
-    List<File> files = fileMapper.findByUserId(userid);
+    List<File> files = fileMapper.findAllFilesByUserId(userid);
     if(files == null){
       throw new Exception();
     }
@@ -65,8 +50,8 @@ public class FileService {
   }
 
 
-  public File getFile(String fileId) {
-    return fileMapper.findFileById(fileId);
+  public File getFileByFileId(String fileId) {
+    return fileMapper.findFileByFileId(fileId);
   }
 
   public boolean deleteFile(String fileId) {

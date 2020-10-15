@@ -13,18 +13,15 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface FileMapper {
 
-  @Select("SELECT * FROM FILES")
-  List<File> getAllFiles();
-
-  @Insert("INSERT INTO FILES (fileName, filePath) VALUES(#{fileName}, #{filePath})")
+  @Insert("INSERT INTO FILES (fileName, filePath, userid) VALUES(#{fileName}, #{filePath}, #{userid})")
   @Options(useGeneratedKeys = true, keyProperty = "fileId")
   int addFile(File file);
 
   @Select("SELECT * FROM FILES WHERE fileId= #{fileId}")
-  File findFileById(String fileId);
+  File findFileByFileId(String fileId);
 
   @Select("SELECT * FROM FILES WHERE userid = #{userid}")
-  List<File> findByUserId(int userid);
+  List<File> findAllFilesByUserId(int userid);
 
   @Delete("DELETE FROM FILES WHERE fileId= #{fileId}")
   boolean deleteNoteById(String id);
