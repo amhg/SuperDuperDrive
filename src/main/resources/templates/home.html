@@ -10,10 +10,10 @@
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <label>Username:</label>
-        <a th:text="${userName}"></a>
+        <a th:text="${username}"></a>
         <div class="container">
             <div id="logoutDiv">
-                <form action="#" method="POST">
+                <form action="#" th:action="@{/logout}" method="POST">
                     <button type="submit" class="btn btn-secondary float-right">Logout</button>
                 </form>
             </div>

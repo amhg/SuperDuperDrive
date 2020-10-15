@@ -1,8 +1,10 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.FileDao;
+import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
+import com.udacity.jwdnd.course1.cloudstorage.model.File;
+import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.service.FileService;
-import java.io.File;
+import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -10,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,20 +28,25 @@ public class FileController {
   @Autowired
   FileService fileService;
 
+  @Autowired
+  private UserService userService;
+
   @PostMapping("/uploadFile")
-  public String validateAndSaveFile(@RequestParam("fileUpload") MultipartFile file, RedirectAttributes redirectAttributes){
+  public String validateIfFileExistAndSaveFile(Authentication authentication, @RequestParam("fileUpload") MultipartFile file, RedirectAttributes redirectAttributes)
+      throws Exception {
+    User user = userService.getUser(authentication.getPrincipal().toString());
 
     if(file.isEmpty()){
       redirectAttributes.addFlashAttribute("errorMessage",  "No File Selected, please try again");
       return "redirect:/home";
     }
 
-    if(fileService.validateFile(file)){
+    if(isFileExist(file, user.getUserId())){
       redirectAttributes.addFlashAttribute("errorMessage",  "File already exists, please try again");
       return "redirect:/home";
     }
 
-    fileService.saveFile(file);
+    fileService.saveFile(file, user.getUserId());
     return "redirect:/home";
 
   }
@@ -46,10 +55,10 @@ public class FileController {
 
   public ResponseEntity<byte[]> getAndDisplayFile(@PathVariable String fileId) throws IOException {
 
-    FileDao fileDao = fileService.getFile(fileId);
+    File fileDao = fileService.getFileByFileId(fileId);
     byte[] data = Files.readAllBytes(Paths.get(fileDao.getFilePath()));
 
-    File file = new File(fileDao.getFilePath());
+    java.io.File file = new java.io.File(fileDao.getFilePath());
     String name = file.getName();
     String mime = Files.probeContentType( Paths.get(file.getPath()));
 
@@ -65,6 +74,17 @@ public class FileController {
   public String deleteFile(@PathVariable String fileId){
     fileService.deleteFile(fileId);
     return "redirect:/home";
+  }
+
+  private boolean isFileExist(MultipartFile originalFilename, int userId) throws Exception {
+
+    for(File file: fileService.getAllFilesByUserId(userId)){
+      String userFileName = StringUtils.cleanPath(originalFilename.getOriginalFilename());
+      if(file.getFileName().equalsIgnoreCase(userFileName)){
+        return true;
+      }
+    }
+    return false;
   }
 
 }

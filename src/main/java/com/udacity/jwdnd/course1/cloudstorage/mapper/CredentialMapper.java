@@ -14,12 +14,12 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface CredentialMapper {
 
-  @Insert("INSERT INTO CREDENTIALS (url, username, password, credentialKey) VALUES(#{url}, #{username}, #{password}, #{credentialKey})")
+  @Insert("INSERT INTO CREDENTIALS (url, username, password, credentialKey, userid) VALUES(#{url}, #{username}, #{password}, #{credentialKey}, #{userid})")
   @Options(useGeneratedKeys = true, keyProperty = "credentialid")
   int addCredential(Credential credential);
 
-  @Select("SELECT * FROM CREDENTIALS")
-  List<Credential> getAllCredentials();
+  @Select("SELECT * FROM CREDENTIALS WHERE userid = #{userid}")
+  List<Credential> findAllCredentialsByUserId(int userid);
 
   @Select("SELECT * FROM CREDENTIALS WHERE credentialid = #{credentialid}")
   Credential getCredentialById(Integer credentialid);

@@ -12,12 +12,13 @@ public class NoteService {
   @Autowired
   private NoteMapper noteMapper;
 
-  public int addNote(Note note){
+  public int addNote(Note note, int userid){
+    note.setUserid(userid);
     return noteMapper.addNote(note);
   }
 
-  public List<Note> getAllNotes(){
-    return noteMapper.getAllNotes();
+  public List<Note> getAllNotesByUserId(int userid){
+    return noteMapper.findAllNotesByUserId(userid);
   }
 
   public int updateNote(Note note){
