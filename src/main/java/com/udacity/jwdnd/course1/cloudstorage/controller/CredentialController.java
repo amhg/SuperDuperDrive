@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -24,12 +25,12 @@ public class CredentialController {
   private EncryptionService encryptionService;
 
   @Autowired
-  private UserMapper userMapper;
+  private UserService userService;
+
 
   @PostMapping("/credentials")
   public String encryptAndAddOrUpdateCredential(Authentication authentication, Credential credential){
-    String username = (String) authentication.getPrincipal();
-    User user = userMapper.getUser(username);
+    User user = userService.getUser(authentication.getPrincipal().toString());
 
     Credential encryptedCredential = encryptCredential(credential);
 

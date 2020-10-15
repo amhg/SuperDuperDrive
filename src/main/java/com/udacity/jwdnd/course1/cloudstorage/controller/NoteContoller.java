@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.service.NoteService;
+import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -18,12 +19,11 @@ public class NoteContoller {
   private NoteService noteService;
 
   @Autowired
-  private UserMapper userMapper;
+  private UserService userService;
 
   @PostMapping("/notes")
   public String createOrUpdateNote(Authentication authentication, Note note) {
-    String username = (String) authentication.getPrincipal();
-    User user = userMapper.getUser(username);
+    User user = userService.getUser(authentication.getPrincipal().toString());
 
     if(note.getNoteId() > 0){
       noteService.updateNote(note);

@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.service.FileService;
+import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,13 +29,12 @@ public class FileController {
   FileService fileService;
 
   @Autowired
-  private UserMapper userMapper;
+  private UserService userService;
 
   @PostMapping("/uploadFile")
   public String validateIfFileExistAndSaveFile(Authentication authentication, @RequestParam("fileUpload") MultipartFile file, RedirectAttributes redirectAttributes)
       throws Exception {
-    String username = (String) authentication.getPrincipal();
-    User user = userMapper.getUser(username);
+    User user = userService.getUser(authentication.getPrincipal().toString());
 
     if(file.isEmpty()){
       redirectAttributes.addFlashAttribute("errorMessage",  "No File Selected, please try again");

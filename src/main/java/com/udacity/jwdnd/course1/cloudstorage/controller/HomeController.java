@@ -5,6 +5,7 @@ import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.service.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.service.NoteService;
+import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -28,15 +29,13 @@ public class HomeController {
   private EncryptionService encryptionService;
 
   @Autowired
-  private UserMapper userMapper;
+  private UserService userService;
 
 
   @GetMapping("/home")
   public ModelAndView getHomePage(Authentication authentication, ModelAndView modelAndView)
       throws Exception {
-
-    String username = (String) authentication.getPrincipal();
-    User user = userMapper.getUser(username);
+    User user = userService.getUser(authentication.getPrincipal().toString());
 
     modelAndView.addObject("username", user.getUsername());
     modelAndView.addObject("files", fileService.getAllFilesByUserId(user.getUserId()));
