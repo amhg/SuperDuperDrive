@@ -1,10 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
@@ -13,15 +11,14 @@ import com.udacity.jwdnd.course1.cloudstorage.pageObject.LoginPage;
 import com.udacity.jwdnd.course1.cloudstorage.pageObject.SignupPage;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialService;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import java.util.List;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -78,7 +75,7 @@ public class ValidationTest {
   }
 
   @Test
-  public void whenUserSignUpLogin_ThenValidateAndInvalidateHomePageAccess() throws InterruptedException {
+  public void whenUserSignUpLogin_ThenValidateAndInvalidateHomePageAccess() {
     String username = "user1";
     String password = "password1";
 
@@ -100,7 +97,7 @@ public class ValidationTest {
   }
 
   @Test
-  public void whenNoteCreated_ThenValidateNoteExists() throws InterruptedException {
+  public void whenNoteCreated_ThenValidateNoteExists() {
 
     userLoginProcess();
 
@@ -108,20 +105,20 @@ public class ValidationTest {
 
     homePage.clickButtonAddNote();
 
+    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
     homePage.createOrEditNote("noteTitle", "noteDescription");
 
-    Thread.sleep(3000);
+    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
     homePage.changeToNoteNavigationTab();
 
-    Thread.sleep(3000);
-
     assertEquals("noteTitle", homePage.getTableNoteTitle());
 
-  }
+   }
 
   @Test
-  public void whenNoteEdited_ThenValidateNoteChanges() throws InterruptedException {
+  public void whenNoteEdited_ThenValidateNoteChanges() {
 
     userLoginProcess();
 
@@ -129,34 +126,30 @@ public class ValidationTest {
 
     homePage.clickEditNote();
 
-    Thread.sleep(3000);
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
     homePage.createOrEditNote("newTitle", "newDescription");
 
-    Thread.sleep(3000);
-
     homePage.changeToNoteNavigationTab();
-
-    //Thread.sleep(3000);
 
     assertEquals("newTitle", homePage.getTableNoteTitle());
 
   }
 
   @Test
-  public void whenNoteDeleted_ThenValidateNoteDeletion() throws InterruptedException {
+  public void whenNoteDeleted_ThenValidateNoteDeletion() {
 
     userLoginProcess();
 
     createNoteProcess();
 
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
     homePage.deleteNote();
 
-    Thread.sleep(2000);
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
     homePage.changeToNoteNavigationTab();
-
-    Thread.sleep(3000);
 
     assertFalse(homePage.doesNoteExist());
 
@@ -168,13 +161,15 @@ public class ValidationTest {
 
     homePage.changeToCredentialNavigationTab();
 
-    Thread.sleep(3000);
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
     homePage.clickButtonAddCredential();
 
+    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
     homePage.createOrEditCredential("url1", "user1", "password1");
 
-    Thread.sleep(2000);
+    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
     homePage.changeToCredentialNavigationTab();
 
@@ -182,20 +177,17 @@ public class ValidationTest {
 
   }
 
-  //TODO add more credenials
   @Test
-  public void whenCredentialIsCreated_ThenValidatePasswordIsEncrypted() throws InterruptedException {
+  public void whenCredentialIsCreated_ThenValidatePasswordIsEncrypted()  {
     userLoginProcess();
 
     homePage.changeToCredentialNavigationTab();
 
-    Thread.sleep(3000);
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);;
 
     homePage.clickButtonAddCredential();
 
     homePage.createOrEditCredential("url1", "user1", "password1");
-
-    Thread.sleep(2000);
 
     homePage.changeToCredentialNavigationTab();
 
@@ -204,28 +196,29 @@ public class ValidationTest {
   }
 
   @Test
-  public void whenEditCredential_ThenValidatePasswordIsUnencrypted()
-      throws InterruptedException {
+  public void whenEditCredential_ThenValidatePasswordIsUnencrypted() {
+
     WebDriverWait wait = new WebDriverWait (driver, 30);
 
     userLoginProcess();
 
     homePage.changeToCredentialNavigationTab();
 
-    Thread.sleep(3000);
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);;
 
     homePage.clickButtonAddCredential();
 
     homePage.createOrEditCredential("url1", "user1", "password1");
 
-    Thread.sleep(2000);
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
     homePage.changeToCredentialNavigationTab();
 
     homePage.clickToEditCredential();
 
     WebElement modalInputCredentialPassword = homePage.getModalInputCredentialPassword();
-    wait.until(ExpectedConditions.elementToBeClickable(modalInputCredentialPassword));
+
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);;
 
     String decryptedPassword = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].value", modalInputCredentialPassword);
     String scriptHtml = "return document.getElementById('credential-id').getAttribute('value');";
@@ -242,28 +235,27 @@ public class ValidationTest {
   public void whenEditCredential_ThenValidateCredentialIsEdited()
       throws InterruptedException {
 
-    WebDriverWait wait = new WebDriverWait (driver, 30);
-
     userLoginProcess();
 
     homePage.changeToCredentialNavigationTab();
 
-    Thread.sleep(2000);
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
     homePage.clickButtonAddCredential();
 
     homePage.createOrEditCredential("url1", "user1", "password1");
 
-    Thread.sleep(2000);
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
     homePage.changeToCredentialNavigationTab();
 
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
     homePage.clickToEditCredential();
-    Thread.sleep(2000);
+
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
     homePage.createOrEditCredential("urlNew", "user1New", "password1New");
-
-    Thread.sleep(2000);
 
     homePage.changeToCredentialNavigationTab();
 
@@ -273,13 +265,12 @@ public class ValidationTest {
 
   @Test
   public void whenCredentialsDeleted_ThenVerifyCredentialDeletion() throws InterruptedException {
-    WebDriverWait wait = new WebDriverWait (driver, 30);
 
     userLoginProcess();
 
-    homePage.changeToCredentialNavigationTab();
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-    Thread.sleep(1000);
+    homePage.changeToCredentialNavigationTab();
 
     for(int i=0; i < 3; i++){
       homePage.clickButtonAddCredential();
@@ -287,9 +278,19 @@ public class ValidationTest {
       homePage.changeToCredentialNavigationTab();
     }
 
-    homePage.deleteCredentials();
+    homePage.changeToCredentialNavigationTab();
+
+    homePage.deleteOneCredential();
+
+    Thread.sleep(2000);
 
     homePage.changeToCredentialNavigationTab();
+
+    homePage.deleteOneCredential();
+
+    homePage.changeToCredentialNavigationTab();
+
+    assertEquals(1, homePage.getCredentialTableSize());
 
   }
 
@@ -314,15 +315,17 @@ public class ValidationTest {
 
   }
 
-  private void createNoteProcess() throws InterruptedException {
+  private void createNoteProcess() {
 
     homePage.changeToNoteNavigationTab();
 
     homePage.clickButtonAddNote();
 
+    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
     homePage.createOrEditNote("noteTitle", "noteDescription");
 
-    Thread.sleep(3000);
+    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
     homePage.changeToNoteNavigationTab();
 
