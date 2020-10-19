@@ -34,11 +34,8 @@ import org.springframework.boot.web.server.LocalServerPort;
  * - Tests for Note Creation, Viewing, Editing, and Deletion
  * - Tests for Credential Creation, Viewing, Editing, and Deletion
  */
-
-//TODO separate classes
-  // TODO add wait.until
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ValidationTest {
+public class CompleteProjectTest {
 
   @LocalServerPort
   public int port;
