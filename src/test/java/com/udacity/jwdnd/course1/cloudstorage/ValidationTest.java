@@ -278,20 +278,25 @@ public class ValidationTest {
       homePage.changeToCredentialNavigationTab();
     }
 
+    Thread.sleep(3000);
+
     homePage.deleteOneCredential();
+
+    Thread.sleep(3000);
 
     homePage.changeToCredentialNavigationTab();
 
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
     homePage.deleteOneCredential();
+
+    Thread.sleep(3000);
 
     homePage.changeToCredentialNavigationTab();
 
     assertEquals(1, homePage.getCredentialTableSize());
 
   }
-
-
-
 
 
   private void userLoginProcess() {
