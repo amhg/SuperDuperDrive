@@ -219,16 +219,13 @@ public class HomePage {
   public void deleteOneCredential(){
     try{
       WebElement body = credentialTable.findElement(By.tagName("tbody"));
-      driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
       if(body != null){
         List<WebElement> credentials = body.findElements(By.tagName("td"));
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         WebElement deleteElement = null;
         if(credentials != null && !credentials.isEmpty()){
           for(int i = 0; i < credentials.size() ; i++){
             WebElement credential = credentials.get(i);
             deleteElement = credential.findElement(By.name("delete"));
-            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             if (deleteElement != null){
               break;
             }

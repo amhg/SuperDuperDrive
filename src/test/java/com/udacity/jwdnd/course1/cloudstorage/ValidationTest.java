@@ -278,11 +278,7 @@ public class ValidationTest {
       homePage.changeToCredentialNavigationTab();
     }
 
-    homePage.changeToCredentialNavigationTab();
-
     homePage.deleteOneCredential();
-
-    Thread.sleep(2000);
 
     homePage.changeToCredentialNavigationTab();
 
