@@ -35,7 +35,7 @@ import org.springframework.boot.web.server.LocalServerPort;
  * - Tests for Credential Creation, Viewing, Editing, and Deletion
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ValidationTest {
+public class CompleteProjectTest {
 
   @LocalServerPort
   public int port;
