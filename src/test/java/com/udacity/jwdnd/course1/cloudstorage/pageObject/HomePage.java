@@ -218,7 +218,7 @@ public class HomePage {
         if(credentials != null && !credentials.isEmpty()){
           for(int i = 0; i < credentials.size() ; i++){
             WebElement credential = credentials.get(i);
-            deleteElement = credential.findElement(By.name("delete"));
+            deleteElement = credential.findElement(By.name("delete-credentialId"));
             if (deleteElement != null){
               break;
             }
