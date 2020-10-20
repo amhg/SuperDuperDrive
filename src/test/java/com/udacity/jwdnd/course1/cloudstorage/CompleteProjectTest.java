@@ -11,7 +11,6 @@ import com.udacity.jwdnd.course1.cloudstorage.pageObject.LoginPage;
 import com.udacity.jwdnd.course1.cloudstorage.pageObject.SignupPage;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialService;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +21,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -188,14 +186,12 @@ public class CompleteProjectTest {
 
     homePage.changeToCredentialNavigationTab();
 
-    assertTrue( homePage.checkForCredentialEncryptedPassword("url1", "user1", credentialService));
+    assertTrue( homePage.checkForEncryptedPassword(credentialService));
 
   }
 
   @Test
   public void whenEditCredential_ThenValidatePasswordIsUnencrypted() {
-
-    WebDriverWait wait = new WebDriverWait (driver, 30);
 
     userLoginProcess();
 
@@ -218,12 +214,6 @@ public class CompleteProjectTest {
     driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);;
 
     String decryptedPassword = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].value", modalInputCredentialPassword);
-    String scriptHtml = "return document.getElementById('credential-id').getAttribute('value');";
-    int credentialId = Integer.parseInt( ((JavascriptExecutor) driver).executeScript(scriptHtml).toString());
-    Credential credential = credentialService.getCredentialById(credentialId);
-    System.out.println("DECRYPTED PASSWORD: " + decryptedPassword);
-    System.out.println("INPUT CREDENTIAL ID: " + credentialId);
-    System.out.println("CREDENTIAL UNINCRYPTED PASSWORD: " + credential.getPassword());
     Assertions.assertEquals("password1", decryptedPassword);
 
   }

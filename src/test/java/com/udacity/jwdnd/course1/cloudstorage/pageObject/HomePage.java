@@ -3,7 +3,6 @@ package com.udacity.jwdnd.course1.cloudstorage.pageObject;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialService;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -180,13 +179,13 @@ public class HomePage {
     wait.until(ExpectedConditions.elementToBeClickable(editCredentialId)).click();
   }
 
-  public boolean checkForCredentialEncryptedPassword(String url, String username, CredentialService credentialService){
-    return getCredentialTableRowAlternative(url, username, credentialService) != null;
+  public boolean checkForEncryptedPassword(CredentialService credentialService){
+    return isPasswordEncrypted(credentialService);
 
   }
 
-  private WebElement getCredentialTableRowAlternative(String url, String username, CredentialService credentialService){
-    WebElement credentialRow = null;
+  private boolean isPasswordEncrypted(CredentialService credentialService){ ;
+    boolean isEncrypted = false;
     try{
       WebElement body = credentialTable.findElement(By.tagName("tbody"));
       if(body != null){
@@ -195,15 +194,9 @@ public class HomePage {
           for(int i = 0; i < rows.size(); i++){
             Credential credential = credentialService.getCredentialById(i + 1);
             WebElement row = rows.get(i);
-            WebElement textCredentialUrl = row.findElement(By.id("table-credentialUrl"));
-            WebElement textCredentialUsername = row.findElement(By.id("table-credentialUsername"));
             WebElement textCredentialPassword = row.findElement(By.id("table-credentialPassword"));
-            System.out.println("CREDENTIAL ENCRYPTED PASSWORD: " + credential.getPassword());
-            System.out.println("CREDENTIAL ENCRYPTED PASSWORD TABLE: " + textCredentialPassword.getAttribute("innerHTML"));
-            if (textCredentialUrl.getAttribute("innerHTML").equals(url) &&
-                textCredentialUsername.getAttribute("innerHTML").equals(username) &&
-                textCredentialPassword.getAttribute("innerHTML").equals(credential.getPassword())) {
-              credentialRow = row;
+            if (textCredentialPassword.getAttribute("innerHTML").equals(credential.getPassword())) {
+              isEncrypted = true;
               break;
             }
           }
@@ -213,7 +206,7 @@ public class HomePage {
     }catch(NoSuchElementException e){
       System.out.println("Element not found");
     }
-    return credentialRow;
+    return isEncrypted;
   }
 
   public void deleteOneCredential(){
